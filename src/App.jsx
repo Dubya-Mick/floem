@@ -87,6 +87,7 @@ function App() {
         const resetPoem = initializePoem(poem.rawPoem);
         return {
           ...poem,
+          isStuttering: false,
           stanza: resetPoem
         }
       }
@@ -139,8 +140,8 @@ function App() {
     })
   }
 
-  const handleToggleSpinAll = () => {
-    const newPoems = poems.map(poem => {
+  const toggleSpinAll = (poems) => {
+    return poems.map(poem => {
       if (poem.id === activePoemId) {
         const newPoem = flipSpin(poem.stanza);
         return {
@@ -150,8 +151,30 @@ function App() {
       }
       return poem;
     })
+  }
+
+  const handleToggleSpinAll = () => {
+    const newPoems = toggleSpinAll(poems);
     setPoems(newPoems);
   }
+
+  const handleStutter = () => {
+    setPoems(poems => toggleSpinAll(poems));
+  }
+
+  const handleToggleStutter = () => {
+    const newPoems = poems.map(poem => {
+      if (poem.id === activePoemId) {
+        return {
+          ...poem,
+          isStuttering: !poem.isStuttering,
+        }
+      }
+      return poem;
+    })
+    setPoems(newPoems);
+  }
+
 
   const newOrder = () => {
     const newPoems = poems.map(poem => {
@@ -192,7 +215,7 @@ function App() {
           Could frame thy fearful symmetry?`,
           title: 'The Tyger',
           id: uniqid(),
-          isStuttering: false,
+          isStuttering: true,
           stanza:  [
             {id: uniqid(), text: "Tiger,", spin: false},
             {id: uniqid(), text: "tiger,", spin: false},
@@ -280,11 +303,14 @@ function App() {
       />
       <MainContainer
         activePoem={activePoem ? activePoem : { stanza: [] }}
+        poems={poems}
         handleSingleWordSpin={handleSingleWordSpin}
         handleToggleSpinAll={handleToggleSpinAll}
         newOrder={newOrder}
         resetPoem={resetPoem}
         newPoem={newPoem}
+        handleStutter={handleStutter}
+        handleToggleStutter={handleToggleStutter}
       />
     </div>
   );

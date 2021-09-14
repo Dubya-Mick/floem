@@ -10,7 +10,9 @@ function MainContainer({
   handleToggleSpinAll,
   newOrder,
   resetPoem,
-  newPoem
+  newPoem,
+  handleStutter,
+  handleToggleStutter,
 }) {
 
   const intervalId = useRef(null);
@@ -20,14 +22,16 @@ function MainContainer({
     setPoemInput(e.target.value);
   }
 
-  // useEffect(() => {
-  //   if (activePoem.isStuttering) {
-  //   const id =  window.setInterval(() => {
-  //       setStanza(stanza => flipSpin(stanza))
-  //     }, 500)
-  //     return () => window.clearInterval(id);
-  //   } 
-  // }, [activePoem.isStuttering]);
+  useEffect(() => {
+    if (activePoem.isStuttering) {
+      const id =  window.setInterval(() => {
+          handleStutter();
+        }, 500)
+      intervalId.current = id;
+        return () => window.clearInterval(id);
+      } 
+  }, [activePoem.isStuttering]);
+
 
   return (
     <div>
@@ -42,6 +46,9 @@ function MainContainer({
         resetPoem={resetPoem}
         poemInput={poemInput}
         newPoem={newPoem}
+        intervalId={intervalId}
+        handleToggleStutter={handleToggleStutter}
+        isStuttering={activePoem.isStuttering}
       /> 
 
       <PoemInput 
