@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Buttons from './Buttons.jsx';
 import Poem from './Poem.jsx';
 import PoemInput from './PoemInput.jsx';
+import './mainContainer.scss';
 
 
 function MainContainer({ 
@@ -34,7 +35,7 @@ function MainContainer({
 
 
   return (
-    <div>
+    <div className="main-container">
       <Poem 
         activePoem={activePoem}
         handleSingleWordSpin={handleSingleWordSpin}

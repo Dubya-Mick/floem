@@ -1,7 +1,13 @@
 import React from 'react'
 import './sideNav.scss'
 
-function SideNav({ toggleSideNavDisplay, sideNavDisplay, titles, handleSetActivePoem }) {
+function SideNav({ 
+  toggleSideNavDisplay, 
+  sideNavDisplay, 
+  titles, 
+  handleSetActivePoem,
+  handleAddPoem,
+}) {
 
   const titleList = titles.map((title, index) => (
     <div
@@ -17,6 +23,7 @@ function SideNav({ toggleSideNavDisplay, sideNavDisplay, titles, handleSetActive
     <div className={`side-nav ${sideNavDisplay ? 'displayed' : ''}`}>
       <button onClick={() => toggleSideNavDisplay()}>Close</button>
       {titleList}
+      <button onClick={() => handleAddPoem()}>Add New Poem</button>
     </div>
   )
 }

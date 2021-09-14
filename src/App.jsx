@@ -9,6 +9,7 @@ import MainContainer from './components/MainContainer.jsx';
 function App() {
 
   const [sideNavDisplay, setSideNavDisplay] = useState(false);
+  const [modalDisplay, setModalDisplay] = useState('');
   const [poems, setPoems] = useState([]);
   const [activePoemId, setActivePoemId] = useState('');
   const LINE_BREAK = 'LINE_BREAK';
@@ -23,8 +24,29 @@ function App() {
     setSideNavDisplay(!sideNavDisplay);
   }
 
+  const displayAddPoemModel = () => {
+    setModalDisplay('add');
+  }
+
   const handleSetActivePoem = (newActivePoemId) => {
     setActivePoemId(newActivePoemId);
+  }
+
+  const createNewPoem = (title) => {
+    return {
+      title: title,
+      rawPoem: '',
+      id: uniqid(),
+      isStuttering: false,
+      stanza: [],
+    }
+  }
+
+  const handleAddPoem = (title) => {
+    const newPoem = createNewPoem(title);
+    const newPoems = {...poems};
+    newPoems.stanza.push(newPoem);
+    setPoems(newPoems);
   }
 
 
@@ -175,7 +197,6 @@ function App() {
     setPoems(newPoems);
   }
 
-
   const newOrder = () => {
     const newPoems = poems.map(poem => {
       if (poem.id === activePoemId) {
@@ -193,7 +214,6 @@ function App() {
 
     setPoems(newPoems);
   }
-
 
   const titles = poems.map(poem => {
     return {
@@ -300,6 +320,8 @@ function App() {
         sideNavDisplay={sideNavDisplay}
         titles={titles}
         handleSetActivePoem={handleSetActivePoem}
+        handleAddPoem={handleAddPoem}
+        displayAddPoemModel={displayAddPoemModel}
       />
       <MainContainer
         activePoem={activePoem ? activePoem : { stanza: [] }}
