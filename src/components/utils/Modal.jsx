@@ -6,8 +6,9 @@ import './modal.scss'
 function Modal({ 
   modalDisplay, 
   hidePoemModal,
-  handleAddPoem
-
+  handleAddPoem,
+  handleGetPoemToDeleteTitle,
+  handleDeletePoem,
 }) {
 
   if (modalDisplay === '') return null;
@@ -26,6 +27,8 @@ function Modal({
         modalDisplay === 'delete'?
         <Delete 
           hidePoemModal={hidePoemModal}
+          handleGetPoemToDeleteTitle={handleGetPoemToDeleteTitle}
+          handleDeletePoem={handleDeletePoem}
         /> :
         null
       }

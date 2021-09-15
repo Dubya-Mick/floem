@@ -13,6 +13,7 @@ function App() {
   const [modalDisplay, setModalDisplay] = useState('');
   const [poems, setPoems] = useState([]);
   const [activePoemId, setActivePoemId] = useState('');
+  const idOfPoemToDelete = useRef(null);
   const LINE_BREAK = 'LINE_BREAK';
 
 
@@ -58,9 +59,26 @@ function App() {
     setPoems(newPoems);
   }
 
-  const handleDeletePoem = (poemId) => {
+  const deletePoem = (poemId) => {
     const newPoems = poems.filter(poem => poem.id !== poemId);
     setPoems(newPoems);
+  }
+
+  const handleDeletePoem = () => {
+    deletePoem(idOfPoemToDelete.current);
+    idOfPoemToDelete.current = null;
+  }
+
+  const getPoemTitle = (poemId) => {
+    const title = poems.reduce((title, poem )=> {
+      if (poem.id === poemId) title += poem.title;
+      return title;
+    }, '')
+    return title;
+  }
+
+  const handleGetPoemToDeleteTitle = () => {
+    return getPoemTitle(idOfPoemToDelete.current);
   }
 
 
@@ -315,9 +333,6 @@ function App() {
     handleSetPoems(dummyUserObj);
   }, [])
 
-  useEffect(() => {
-    console.log('active-poem', activePoem);
-  }, [activePoem])
 
   const activePoem = poems.find(poem => poem.id === activePoemId);
   
@@ -337,6 +352,7 @@ function App() {
         handleAddPoem={handleAddPoem}
         displayAddPoemModal={displayAddPoemModal}
         displayDeletePoemModal={displayDeletePoemModal}
+        idOfPoemToDelete={idOfPoemToDelete}
       />
       <MainContainer
         activePoem={activePoem ? activePoem : { stanza: [] }}
@@ -353,7 +369,8 @@ function App() {
         modalDisplay={modalDisplay}
         hidePoemModal={hidePoemModal}
         handleAddPoem={handleAddPoem}
-      
+        handleGetPoemToDeleteTitle={handleGetPoemToDeleteTitle}
+        handleDeletePoem={handleDeletePoem}
       />
     </div>
   );

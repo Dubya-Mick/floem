@@ -8,6 +8,7 @@ function SideNav({
   handleSetActivePoem,
   displayAddPoemModal,
   displayDeletePoemModal,
+  idOfPoemToDelete,
 }) {
 
   const titleList = titles.map((title, index) => (
@@ -22,7 +23,10 @@ function SideNav({
       </div>
       <i 
         className="far fa-trash-alt"
-        onClick={() => displayDeletePoemModal()}
+        onClick={() => {
+          idOfPoemToDelete.current = title.id;
+          displayDeletePoemModal()
+        }}
       >
       </i>
     </div>

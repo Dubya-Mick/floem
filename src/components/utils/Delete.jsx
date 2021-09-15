@@ -1,7 +1,11 @@
 import React from 'react'
 import './modal.scss'
 
-function Delete({ hidePoemModal }) {
+function Delete({ 
+  hidePoemModal,
+  handleGetPoemToDeleteTitle, 
+  handleDeletePoem,
+}) {
   return (
     <div 
     className="add-delete"
@@ -9,12 +13,13 @@ function Delete({ hidePoemModal }) {
   >
     <div className="input-container">
       <div>
-        Are you sure you want to delete PoemName?
+        Are you sure you want to delete {handleGetPoemToDeleteTitle()}?
       </div>
       <div className="modal-buttons">
         <button 
           className="modal-button"
           onClick={() => {
+            handleDeletePoem();
             hidePoemModal();
           }}
         >
