@@ -10,13 +10,20 @@
   background: #e0e0e0;
   box-shadow:  20px 20px 60px #bebebe,
              -20px -20px 60px #ffffff;
-  
 }
 
 .displayed {
   width: 15rem;
 }
 
-.title {
-  cursor: pointer
+.side-nav-content-container {
+  width: 13rem;
+  margin: 0 auto;
 }
+
+.title-container {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+

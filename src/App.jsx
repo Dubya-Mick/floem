@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import uniqid from 'uniqid';
 import Header from './components/Header.jsx';
 import SideNav from './components/SideNav.jsx';
+import Modal from './components/utils/Modal.jsx';
 import MainContainer from './components/MainContainer.jsx';
 
 
@@ -24,8 +25,16 @@ function App() {
     setSideNavDisplay(!sideNavDisplay);
   }
 
-  const displayAddPoemModel = () => {
+  const displayAddPoemModal = () => {
     setModalDisplay('add');
+  }
+
+  const displayDeletePoemModal = () => {
+    setModalDisplay('delete');
+  }
+
+  const hidePoemModal = () => {
+    setModalDisplay('');
   }
 
   const handleSetActivePoem = (newActivePoemId) => {
@@ -44,8 +53,13 @@ function App() {
 
   const handleAddPoem = (title) => {
     const newPoem = createNewPoem(title);
-    const newPoems = {...poems};
-    newPoems.stanza.push(newPoem);
+    const newPoems = [...poems];
+    newPoems.push(newPoem);
+    setPoems(newPoems);
+  }
+
+  const handleDeletePoem = (poemId) => {
+    const newPoems = poems.filter(poem => poem.id !== poemId);
     setPoems(newPoems);
   }
 
@@ -235,7 +249,7 @@ function App() {
           Could frame thy fearful symmetry?`,
           title: 'The Tyger',
           id: uniqid(),
-          isStuttering: true,
+          isStuttering: false,
           stanza:  [
             {id: uniqid(), text: "Tiger,", spin: false},
             {id: uniqid(), text: "tiger,", spin: false},
@@ -321,7 +335,8 @@ function App() {
         titles={titles}
         handleSetActivePoem={handleSetActivePoem}
         handleAddPoem={handleAddPoem}
-        displayAddPoemModel={displayAddPoemModel}
+        displayAddPoemModal={displayAddPoemModal}
+        displayDeletePoemModal={displayDeletePoemModal}
       />
       <MainContainer
         activePoem={activePoem ? activePoem : { stanza: [] }}
@@ -333,6 +348,12 @@ function App() {
         newPoem={newPoem}
         handleStutter={handleStutter}
         handleToggleStutter={handleToggleStutter}
+      />
+      <Modal 
+        modalDisplay={modalDisplay}
+        hidePoemModal={hidePoemModal}
+        handleAddPoem={handleAddPoem}
+      
       />
     </div>
   );

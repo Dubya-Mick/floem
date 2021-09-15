@@ -6,24 +6,35 @@ function SideNav({
   sideNavDisplay, 
   titles, 
   handleSetActivePoem,
-  handleAddPoem,
+  displayAddPoemModal,
+  displayDeletePoemModal,
 }) {
 
   const titleList = titles.map((title, index) => (
-    <div
-      className="title"
-      onClick={() => handleSetActivePoem(title.id)}
+    <div 
+      className="title-container"
       key={index}
     >
-      {title.title}
+      <div
+        onClick={() => handleSetActivePoem(title.id)}
+      >
+        {title.title}
+      </div>
+      <i 
+        className="far fa-trash-alt"
+        onClick={() => displayDeletePoemModal()}
+      >
+      </i>
     </div>
   ))
 
   return (
     <div className={`side-nav ${sideNavDisplay ? 'displayed' : ''}`}>
-      <button onClick={() => toggleSideNavDisplay()}>Close</button>
-      {titleList}
-      <button onClick={() => handleAddPoem()}>Add New Poem</button>
+      <div className="side-nav-content-container">
+        <button onClick={() => toggleSideNavDisplay()}>Close</button>
+        {titleList}
+        <button onClick={() => displayAddPoemModal()}>Add New Poem</button>
+      </div>
     </div>
   )
 }

@@ -23,11 +23,15 @@ function Buttons({
           intervalId.current = null;
         }
         resetPoem()
-        }}>Reset</button>
+        }}
+      >
+        Reset
+      </button>
       <button 
         className={`button ${isStuttering ? 'active' : ''}` }
         onClick={() => handleToggleStutter()}
-        >Stutter
+      >
+        Stutter
       </button>
       <button className="button" type="submit" onClick={() => newPoem(poemInput)}>Set Poem</button>
     
