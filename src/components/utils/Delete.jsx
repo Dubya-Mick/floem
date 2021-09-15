@@ -9,6 +9,7 @@ function Delete({
   return (
     <div 
     className="add-delete"
+    // to keep the child from closing the whole modal on click
     onClick={(e) => e.stopPropagation()}
   >
     <div className="input-container">
