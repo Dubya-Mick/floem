@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const models = require('./models');
+const uniqid = require('uniqid');
 
 const userController = {};
 
@@ -17,13 +18,14 @@ const createUser = (username) => {
   }
 }
 
-userController.getUsers = async (req, res, next) => {
+userController.getUser = async (req, res, next) => {
   try {
-    const users = await models.User.find({});
-    console.log('poems', users[0].poems[0]._id)
-    console.log('logged from middleware get users', users);
-    res.locals.users = users;
-    next();
+    const { username } = req.query;
+
+    const user = await models.User.findOne({ username: username });
+    res.locals.user = user;
+    console.log('rezzzyy locals', res.locals.user)
+    return next();
   } catch (err) {
     next({
       log: 'something went wrong in getUsers',
@@ -48,8 +50,58 @@ userController.addUser = async (req, res, next) => {
       message: { err: err }
     })
   }
+}
 
+userController.updatePoems = async (req, res, next) => {
+  const newPoems = req.body.poems;
+  const { username } = req.query;
 
+  try {
+    const updatedUser = await models.User.findOneAndUpdate(
+      { username: username },
+      { poems: newPoems},
+      { new: true }
+    );
+
+    res.locals.user = updatedUser;
+    return next();
+      
+  } catch (error) {
+    return next({
+      log: 'something went wrong in updatePoems',
+      status: 500,
+      message: {err: error}
+    })
+  }
+}
+
+userController.addIds = (req, res, next) => {
+  if (!res.locals.user) {
+    return next({
+      log: 'something went wrong in addIds: no updatedUser on res.locals',
+      status: 500,
+    })
+  }
+  const { poems } = res.locals.user;
+  console.log(poems);
+  const poemsWithIds = poems.map(poem => {
+
+    const stanzaWithIds = poem.stanza.map(word => {
+      return {
+        ...word,
+        id: uniqid()
+      }
+    });
+
+    return {
+      ...poem.toObject(), 
+      stanza: stanzaWithIds
+    }
+  })
+
+  res.locals.user.poems = poemsWithIds;
+  console.log('add ids', res.locals.user)
+  return next();
 }
 
 module.exports = userController;

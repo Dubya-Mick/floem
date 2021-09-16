@@ -6,10 +6,10 @@ const router = express.Router();
 
 router.get(
   '/',
-  userController.getUsers,
+  userController.getUser,
+  userController.addIds,
   (req, res) => {
-    console.log('logged from router', res.locals.users);
-    res.status(200).json(res.locals.users);
+    res.status(200).json(res.locals.user);
   }
 )
 
@@ -20,5 +20,19 @@ router.post(
     res.status(200).json(res.locals.user);
   }
 )
+
+router.put(
+  '/',
+  userController.updatePoems,
+  userController.addIds,
+  (req, res) => {
+    res.status(200).json(res.locals.user);
+  }
+
+
+
+)
+
+
 
 module.exports = router;
