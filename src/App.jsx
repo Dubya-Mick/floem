@@ -18,9 +18,23 @@ function App() {
   const LINE_BREAK = 'LINE_BREAK';
 
 
+  const fetchNewPoemsToDb = (poems) => {
+    return fetch('/users/?username=Jixon', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(poems)
+    })
+      .then(data => data.json())
+      .then( ({ poems }) => {
+        return poems
+      })
+  }
+
   const handleSetPoems = (userObj) => {
     setPoems(userObj.poems);
-    setActivePoemId(userObj.poems[0].id);
+    setActivePoemId(userObj.poems[0]._id);
   }
 
   const toggleSideNavDisplay = () => {
@@ -61,7 +75,7 @@ function App() {
   }
 
   const deletePoem = (poemId) => {
-    const newPoems = poems.filter(poem => poem.id !== poemId);
+    const newPoems = poems.filter(poem => poem._id !== poemId);
     setPoems(newPoems);
   }
 
@@ -72,7 +86,7 @@ function App() {
 
   const getPoemTitle = (poemId) => {
     const title = poems.reduce((title, poem )=> {
-      if (poem.id === poemId) title += poem.title;
+      if (poem._id === poemId) title += poem.title;
       return title;
     }, '')
     return title;
@@ -138,7 +152,7 @@ function App() {
 
   const resetPoem = () => {
     const newPoems = poems.map(poem => {
-      if (poem.id === activePoemId) {
+      if (poem._id === activePoemId) {
         const resetPoem = initializePoem(poem.rawPoem);
         return {
           ...poem,
@@ -148,12 +162,16 @@ function App() {
       }
       return poem;
     })
-    setPoems(newPoems)
+    fetchNewPoemsToDb(newPoems)
+      .then(poems => setPoems(poems));
+
+    //setPoems(newPoems)
   }
 
   const newPoem = (newPoemInput) => {
+    console.log(newPoemInput)
     const newPoems = poems.map(poem => {
-      if (poem.id === activePoemId) {
+      if (poem._id === activePoemId) {
         const resetPoem = initializePoem(newPoemInput);
         return {
           ...poem,
@@ -163,12 +181,14 @@ function App() {
       }
       return poem;
     })
-    setPoems(newPoems)
+    fetchNewPoemsToDb(newPoems)
+      .then(poems => setPoems(poems));
+    //setPoems(newPoems)
   }
 
   const handleSingleWordSpin = (wordId) => {
     const newPoems = poems.map(poem => {
-      if (poem.id === activePoemId) {
+      if (poem._id === activePoemId) {
         const newPoem = poem.stanza.map(word => {
           if (word.id === wordId) {
             return {
@@ -186,7 +206,10 @@ function App() {
       return poem;
     });
 
-    setPoems(newPoems);
+    fetchNewPoemsToDb(newPoems)
+      .then(poems => setPoems(poems));
+
+    //setPoems(newPoems);
   }
 
   const flipSpin = (poem) => {
@@ -198,7 +221,7 @@ function App() {
 
   const toggleSpinAll = (poems) => {
     return poems.map(poem => {
-      if (poem.id === activePoemId) {
+      if (poem._id === activePoemId) {
         const newPoem = flipSpin(poem.stanza);
         return {
           ...poem,
@@ -211,7 +234,11 @@ function App() {
 
   const handleToggleSpinAll = () => {
     const newPoems = toggleSpinAll(poems);
-    setPoems(newPoems);
+    console.log('not from db', newPoems);
+
+    fetchNewPoemsToDb(newPoems)
+      .then(poems => setPoems(poems));
+
   }
 
   const handleStutter = () => {
@@ -220,7 +247,7 @@ function App() {
 
   const handleToggleStutter = () => {
     const newPoems = poems.map(poem => {
-      if (poem.id === activePoemId) {
+      if (poem._id === activePoemId) {
         return {
           ...poem,
           isStuttering: !poem.isStuttering,
@@ -228,12 +255,15 @@ function App() {
       }
       return poem;
     })
-    setPoems(newPoems);
+
+    fetchNewPoemsToDb(newPoems)
+      .then(poems => setPoems(poems));
+    //setPoems(newPoems);
   }
 
   const newOrder = () => {
     const newPoems = poems.map(poem => {
-      if (poem.id === activePoemId) {
+      if (poem._id === activePoemId) {
         const newOrderedPoem = poem.stanza
           .map(a => ({ sort: Math.random(), value: a }))
           .sort((a, b) => a.sort - b.sort)
@@ -245,24 +275,41 @@ function App() {
       }
       return poem;
     })
-
+    
     setPoems(newPoems);
   }
 
   useEffect(() => {
-    handleSetPoems(dummyUserObj);
+
+    fetch('/users/?username=Jixon')
+      .then(data => data.json())
+      .then(userObj => {
+        handleSetPoems(userObj);
+      })
+
+
+    //handleSetPoems(dummyUserObj);
   }, [])
+
+  useEffect(() => {
+    console.log(activePoemId);
+  }, ['activepoemid', activePoemId])
+
+
+  // useEffect(() => {
+  //   console.log(poems);
+  // }, [poems])
 
   const titles = poems.map(poem => {
     return {
       title: poem.title,
-      id: poem.id
+      id: poem._id
     }
   });
 
-  const activePoem = poems.find(poem => poem.id === activePoemId);
+  const activePoem = poems.find(poem => poem._id === activePoemId); // change to ._id
   
-  
+  console.log(activePoem)
 
 
   return (

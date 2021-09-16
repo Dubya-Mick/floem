@@ -18,6 +18,9 @@ module.exports = {
       directory: path.resolve(__dirname, 'dist'),
     },
     port: 8080,
+    proxy: {
+      '/users': 'http://localhost:3000/'
+    }
   },
 
   module: {

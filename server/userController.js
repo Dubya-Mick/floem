@@ -53,7 +53,7 @@ userController.addUser = async (req, res, next) => {
 }
 
 userController.updatePoems = async (req, res, next) => {
-  const newPoems = req.body.poems;
+  const newPoems = req.body;
   const { username } = req.query;
 
   try {
@@ -62,6 +62,8 @@ userController.updatePoems = async (req, res, next) => {
       { poems: newPoems},
       { new: true }
     );
+
+    console.log('updated poems', updatedUser.poems[0].stanza);
 
     res.locals.user = updatedUser;
     return next();
@@ -83,10 +85,12 @@ userController.addIds = (req, res, next) => {
     })
   }
   const { poems } = res.locals.user;
-  console.log(poems);
+
+  //add ids to words for tracking on the frontend
   const poemsWithIds = poems.map(poem => {
 
     const stanzaWithIds = poem.stanza.map(word => {
+      if (word === 'LINE_BREAK') return word;
       return {
         ...word,
         id: uniqid()
@@ -100,7 +104,6 @@ userController.addIds = (req, res, next) => {
   })
 
   res.locals.user.poems = poemsWithIds;
-  console.log('add ids', res.locals.user)
   return next();
 }
 

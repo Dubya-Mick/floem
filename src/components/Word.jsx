@@ -5,7 +5,6 @@ function Word({ word, handleSingleWordSpin }) {
 
   return (
     <div 
-      key={word.id}
       className={`box ${word.spin ? "" : "paused"}`}
       onClick={() => handleSingleWordSpin(word.id)}
     >
